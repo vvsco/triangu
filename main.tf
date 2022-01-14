@@ -29,14 +29,12 @@ resource "aws_vpc" "main" {
 }
 
 # routers:
-resource "aws_internet_gateway" "main" {
-    vpc_id = aws_vpc.main
+resource "aws_internet_gateway" "main-gw" {
+    vpc_id = aws_vpc.main.id
     tags = {
         name = "${var.env}-main-gw"
     }
 }
-
-
 
 # networks:
 resource "aws_subnet" "public_subnets" {
@@ -49,14 +47,13 @@ resource "aws_subnet" "public_subnets" {
     }
 }
 resource "aws_route_table" "public_subnets" {
-    count  = length(var.subnets_cidrs)
     vpc_id = aws_vpc.main.id
-    route  = {
+    route {
         cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.main.id
+        gateway_id = aws_internet_gateway.main-gw.id
     }
     tags   = {
-        name = "${var.env}-public-${count.index + 1}"
+        name = "${var.env}-public"
     }
 }
 resource "aws_route_table_association" "public_routes" {

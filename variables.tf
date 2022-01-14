@@ -11,10 +11,9 @@ variable "env" {default = "test"}
 variable "vpc_cidr" {default = "10.0.0.0/16"}
 variable "subnets_cidrs" {
     default = [
-        "10.1.0.0/24",
+        "10.0.11.0/24",
     ]
 }
-
 variable ingress_ports {
     description = "List of open ports for incoming connections, for example [22, 80]"
     type        = list
