@@ -2,4 +2,8 @@
 *.tfstate
 *.tfstate.backup
 *.terraform.lock.hcl
+*.json
+cluster.yaml
+kubernetes.tf
 tf_aws.cmd
+tf_aws.sh

@@ -4,7 +4,7 @@
 
 ### IAM
 create accounts:
-- worker 
+- worker (with admin privilegies)
 - terraform (program only)
 
 ### S3
