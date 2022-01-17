@@ -44,3 +44,40 @@ module "vpc" {
     public_subnet_tags = {"kubernetes.io/role/elb" = true}
 
 }
+
+locals {
+    kops_state_bucket_name  = "${var.env}-kops-state"
+    // Needs to be a FQDN
+    kubernetes_cluster_name = var.kubernetes_cluster_name
+    ingress_ips             = var.ingress_ips
+    vpc_name                = var.env
+
+    tags = {
+        environment = "${var.env}"
+        terraform   = "true"
+    }
+}
+
+resource "aws_s3_bucket" "kops_state" {
+    bucket        = "${local.kops_state_bucket_name}"
+    acl           = "private"
+    force_destroy = true
+    tags          = "${merge(local.tags)}"
+}
+
+resource "aws_security_group" "k8s_common_http" {
+    name   = "${var.env}_k8s_common_http"
+    vpc_id = "${module.vpc.vpc_id}"
+    tags   = "${merge(local.tags)}"
+
+    dynamic "ingress" {
+        for_each = var.ingress_ports
+        content {
+            from_port        = ingress.value
+            to_port          = ingress.value
+            protocol         = "tcp"
+            #cidr_blocks      = ["0.0.0.0/0"]
+            cidr_blocks      = ["${local.ingress_ips}"]
+        }
+    }
+}

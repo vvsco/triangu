@@ -31,3 +31,8 @@ variable ingress_ports {
     type        = list
     default     = ["80", "443"]
 }
+
+variable "ingress_ips" {
+    type        = list
+    default     = ["10.0.0.100/32", "10.0.0.101/32"]
+}

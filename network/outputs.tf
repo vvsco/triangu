@@ -55,18 +55,18 @@ output "availability_zones" {
 }
 
 output "common_http_sg_id" {
-  value = "${aws_security_group.k8s_common_http.id}"
+    value = "${aws_security_group.k8s_common_http.id}"
 }
 
 // Needed for kops
 
 output "kops_s3_bucket" {
-  value = "${aws_s3_bucket.kops_state.bucket}"
+    value = "${aws_s3_bucket.kops_state.bucket}"
 }
 
-output "kubernetes_cluster_name" {
-  value = "${local.kubernetes_cluster_name}"
-}
+#output "kubernetes_cluster_name" {
+#  value = "${local.kubernetes_cluster_name}"
+#}
 
 output "kubernetes_cluster_name" {
     value = var.kubernetes_cluster_name
