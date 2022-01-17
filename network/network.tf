@@ -20,9 +20,18 @@ terraform {
     }
 }
 
+locals {
+    vpc_name = "${var.env}"
+    kops_state_bucket_name  = "${var.env}-kops-state"
+    tags = {
+        environment = "${var.env}"
+        terraform   = "true"
+    }
+}
+
 module "vpc" {
     source = "terraform-aws-modules/vpc/aws"
-    name = var.env
+    name = local.vpc_name
     cidr = var.vpc_cidr
 
     azs             = data.aws_availability_zones.available.names
@@ -42,20 +51,6 @@ module "vpc" {
     }
     private_subnet_tags = {"kubernetes.io/role/internal-elb" = true}
     public_subnet_tags = {"kubernetes.io/role/elb" = true}
-
-}
-
-locals {
-    kops_state_bucket_name  = "${var.env}-kops-state"
-    // Needs to be a FQDN
-    kubernetes_cluster_name = var.kubernetes_cluster_name
-    ingress_ips             = var.ingress_ips
-    vpc_name                = var.env
-
-    tags = {
-        environment = "${var.env}"
-        terraform   = "true"
-    }
 }
 
 resource "aws_s3_bucket" "kops_state" {
@@ -77,7 +72,7 @@ resource "aws_security_group" "k8s_common_http" {
             to_port          = ingress.value
             protocol         = "tcp"
             #cidr_blocks      = ["0.0.0.0/0"]
-            cidr_blocks      = ["${local.ingress_ips}"]
+            cidr_blocks      = ["${var.ingress_ips}"]
         }
     }
 }
