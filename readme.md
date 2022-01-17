@@ -1,6 +1,6 @@
 # Test tasks
 
-## AWS pre-task
+## AWS pre-tasks
 
 ### IAM
 create accounts:
